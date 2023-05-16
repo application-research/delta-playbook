@@ -59,6 +59,14 @@
     force: true
     update: true
   become_user: "{{ delta_system_user | default('delta') }}"
+  register: delta_checkout
+
+- name: If Delta git repository changed, run make clean
+  ansible.builtin.shell:
+    chdir: "{{ compile_dir }}"
+    cmd: ". /etc/profile.d/golang.sh && make clean"
+  become_user: "{{ delta_system_user | default('delta') }}"
+  when: delta_checkout.changed
 
 - name: Build Delta  # noqa 301
   ansible.builtin.shell:
