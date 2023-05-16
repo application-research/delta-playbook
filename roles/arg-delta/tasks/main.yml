@@ -74,7 +74,6 @@
     cmd: ". /etc/profile.d/golang.sh && make all"
     creates: "{{ compile_dir }}/delta"
   become_user: "{{ delta_system_user | default('delta') }}"
-  notify: Restart Delta
 
 - name: Install Delta
   ansible.builtin.copy:
@@ -84,6 +83,7 @@
     group: "{{ delta_system_group | default('delta') }}"
     mode: '0755'
     remote_src: true
+  notify: Restart Delta
 
 - name: Install Delta systemd service from template
   ansible.builtin.template:
